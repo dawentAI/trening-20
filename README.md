@@ -26,6 +26,10 @@ Plan jest osobnym plikiem **`plan.js`** (obiekt `PLAN`). Żeby zmienić plan tre
 wygeneruj nowy `PLAN` na podstawie zaktualizowanego `Plan treningowy 20 minut.md` i podmień plik.
 Historia CSV pozostaje kompatybilna, dopóki nazwy ćwiczeń się zgadzają.
 
+W `plan.js` jest też obiekt `EXERCISE_INFO` (nazwa ćwiczenia → opis techniki + ID filmu YouTube).
+Karta ćwiczenia pokazuje sekcję „ℹ️ Jak wykonać": opis, 3 klatki z filmu (miniatury YouTube)
+i link do filmu. Skrypt `tools/find_videos.py` wyszukuje kandydatów na filmy dla nowych ćwiczeń.
+
 ## Uruchomienie / publikacja (GitHub Pages)
 
 1. Repozytorium z zawartością tego folderu, gałąź `main`.

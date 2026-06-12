@@ -336,6 +336,18 @@ function renderSession() {
     const lastTxt = sug.last
       ? `Ostatnio: <b>${fmtW(sug.last.weight)} kg</b> → ${(sug.last.reps || []).join(", ")} powt.${sug.last.rpe ? " @RPE " + sug.last.rpe : ""}`
       : "Brak historii";
+    const info = typeof EXERCISE_INFO !== "undefined" ? EXERCISE_INFO[item.name] : null;
+    const howto = info ? `
+      <details class="howto" data-howto="${i}" ${item.infoOpen ? "open" : ""}>
+        <summary>ℹ️ Jak wykonać</summary>
+        <p>${esc(info.desc)}</p>
+        <div class="thumbs">
+          ${[1, 2, 3].map(n =>
+            `<a href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">
+               <img loading="lazy" src="https://i.ytimg.com/vi/${info.yt}/hq${n}.jpg" alt="technika — klatka ${n}"></a>`).join("")}
+        </div>
+        <a class="yt-link" href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">▶ Obejrzyj film z techniką</a>
+      </details>` : "";
 
     html += `<div class="card ex-card ${allDone ? "done-all" : ""}" data-i="${i}">
       <div class="ex-head">
@@ -343,6 +355,7 @@ function renderSession() {
         <span class="sub">${ex.repMin}–${ex.repMax} @RPE ${esc(ex.rpe)}</span>
       </div>
       <div class="ex-tip">${esc(ex.tip)}</div>
+      ${howto}
       <div class="suggestion">${lastTxt}<br>${esc(sug.msg)}
         ${sug.hint ? `<br><span class="hint">⚠ ${esc(sug.hint)}</span>` : ""}</div>
       <div class="weight-row">
@@ -394,6 +407,10 @@ function bindSession(active) {
 
   document.getElementById("backBtn").onclick = () => { save(); renderHome(); };
 
+  document.querySelectorAll("[data-howto]").forEach(d => d.ontoggle = () => {
+    active.items[+d.dataset.howto].infoOpen = d.open;
+    save();
+  });
   document.querySelectorAll("[data-w]").forEach(inp => inp.onchange = () => {
     const i = +inp.dataset.w;
     active.items[i].weight = inp.value === "" ? null : Number(inp.value);

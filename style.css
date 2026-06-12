@@ -93,6 +93,34 @@ button:active { transform: scale(0.98); }
 .ex-slot { color: var(--accent); font-weight: 800; font-size: 0.85rem; }
 .ex-tip { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
 
+/* ---- jak wykonać ---- */
+.howto {
+  background: var(--card2);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+.howto summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+.howto[open] summary { margin-bottom: 6px; color: var(--text); }
+.howto p { color: var(--text); margin-bottom: 8px; }
+.thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.thumbs img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  background: var(--bg);
+}
+.yt-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .suggestion {
   background: var(--card2);
   border-radius: 10px;
