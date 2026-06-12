@@ -132,7 +132,15 @@ button:active { transform: scale(0.98); }
 .suggestion .hint { color: var(--warn); }
 
 .weight-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-.weight-row label { color: var(--muted); font-size: 0.85rem; }
+.weight-row label { color: var(--muted); font-size: 0.85rem; flex-shrink: 0; }
+.weight-row input[type="number"] { flex-shrink: 0; }
+.weight-row select {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 input[type="number"], input[type="text"], select {
   font: inherit;
   background: var(--card2);
