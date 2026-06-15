@@ -381,11 +381,16 @@ function renderSession(preserveScroll) {
         <summary>ℹ️ Jak wykonać</summary>
         <p>${esc(info.desc)}</p>
         <div class="thumbs">
-          ${[1, 2, 3].map(n =>
+          ${["hqdefault", "hq1", "hq2", "hq3"].map((f, k) =>
             `<a href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">
-               <img loading="lazy" src="https://i.ytimg.com/vi/${info.yt}/hq${n}.jpg" alt="technika — klatka ${n}"></a>`).join("")}
+               <img loading="lazy" src="https://i.ytimg.com/vi/${info.yt}/${f}.jpg" alt="technika — klatka ${k + 1}"></a>`).join("")}
         </div>
-        <a class="yt-link" href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">▶ Obejrzyj film z techniką</a>
+        <div class="video-wrap">
+          <iframe loading="lazy" src="https://www.youtube.com/embed/${info.yt}"
+                  title="Film z techniką" allowfullscreen
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <a class="yt-link" href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">▶ Otwórz w YouTube</a>
       </details>` : "";
 
     html += `<div class="card ex-card ${allDone ? "done-all" : ""}" data-i="${i}">

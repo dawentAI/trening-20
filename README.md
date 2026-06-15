@@ -27,8 +27,9 @@ wygeneruj nowy `PLAN` na podstawie zaktualizowanego `Plan treningowy 20 minut.md
 Historia CSV pozostaje kompatybilna, dopóki nazwy ćwiczeń się zgadzają.
 
 W `plan.js` jest też obiekt `EXERCISE_INFO` (nazwa ćwiczenia → opis techniki + ID filmu YouTube).
-Karta ćwiczenia pokazuje sekcję „ℹ️ Jak wykonać": opis, 3 klatki z filmu (miniatury YouTube)
-i link do filmu. Skrypt `tools/find_videos.py` wyszukuje kandydatów na filmy dla nowych ćwiczeń.
+Karta ćwiczenia pokazuje sekcję „ℹ️ Jak wykonać": opis, 4 klatki z filmu (miniatury YouTube —
+`hqdefault`+`hq1..3`, więcej niż 4 YouTube nie udostępnia), osadzony odtwarzacz YouTube
+(ładowany leniwie) i link do filmu. Skrypt `tools/find_videos.py` wyszukuje kandydatów na filmy dla nowych ćwiczeń.
 
 ## Uruchomienie / publikacja (GitHub Pages)
 
