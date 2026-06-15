@@ -192,6 +192,8 @@ select { max-width: 100%; }
   width: 44px; height: 44px;
   font-size: 1.3rem; font-weight: 700;
   border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; line-height: 1;
 }
 .stepper .val {
   width: 52px; text-align: center;
@@ -205,6 +207,8 @@ select { max-width: 100%; }
   background: var(--card2);
   color: var(--muted);
   border: 1px solid var(--border);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; line-height: 1;
 }
 .check.on { background: var(--accent); color: #0b1f16; border-color: var(--accent); }
 
@@ -217,6 +221,8 @@ select { max-width: 100%; }
   background: var(--card2);
   color: var(--muted);
   border: 1px solid var(--border);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; line-height: 1;
 }
 .rpe-chip.on { background: var(--card2); color: var(--accent); border-color: var(--accent); }
 

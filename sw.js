@@ -1,6 +1,6 @@
 // Service worker — pozwala otworzyć aplikację offline (np. na siłowni bez zasięgu).
 // Przy każdej aktualizacji aplikacji podbij CACHE_VERSION.
-const CACHE_VERSION = "trening-v9";
+const CACHE_VERSION = "trening-v10";
 const ASSETS = [
   "./",
   "./index.html",
