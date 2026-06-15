@@ -222,6 +222,24 @@ select { max-width: 100%; }
   text-align: center;
 }
 
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  width: 100%; max-width: 360px;
+}
+.modal-msg { white-space: pre-line; margin-bottom: 14px; }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btns button { flex: 1; margin-top: 0; }
+
 .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .top-bar button { background: none; color: var(--muted); padding: 8px; }
 

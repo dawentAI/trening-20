@@ -59,6 +59,28 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.remove(), 3000);
 }
 
+// Własne potwierdzenie — natywne confirm()/alert() nie działają w PWA na iOS
+// (apple-mobile-web-app-capable), więc nie można na nich polegać.
+function confirmDialog(msg) {
+  return new Promise(resolve => {
+    const ov = document.createElement("div");
+    ov.className = "modal-overlay";
+    ov.innerHTML = `<div class="modal">
+        <div class="modal-msg"></div>
+        <div class="modal-btns">
+          <button class="btn-secondary" data-no>Anuluj</button>
+          <button class="btn-primary" data-yes>OK</button>
+        </div>
+      </div>`;
+    ov.querySelector(".modal-msg").textContent = msg;
+    document.body.appendChild(ov);
+    const close = val => { ov.remove(); resolve(val); };
+    ov.querySelector("[data-yes]").onclick = () => close(true);
+    ov.querySelector("[data-no]").onclick = () => close(false);
+    ov.onclick = e => { if (e.target === ov) close(false); };
+  });
+}
+
 // ---------- progression logic (zasady z planu) ----------
 
 function entriesFor(name) {
@@ -206,10 +228,10 @@ function importCSV(fileInput) {
   const f = fileInput.files[0];
   if (!f) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const hist = csvToHistory(reader.result);
-      if (!confirm(`Wczytano ${hist.length} sesji. Zastąpić obecną historię (${loadHistory().length} sesji)?`)) return;
+      if (!(await confirmDialog(`Wczytano ${hist.length} sesji. Zastąpić obecną historię (${loadHistory().length} sesji)?`))) return;
       saveHistory(hist);
       toast("Historia zaimportowana");
       renderHome();
@@ -269,15 +291,15 @@ function renderHome() {
   $app.innerHTML = html;
 
   document.getElementById("startBtn").onclick = () => startSession(nextId);
-  document.querySelectorAll("[data-start]").forEach(b => b.onclick = () => {
+  document.querySelectorAll("[data-start]").forEach(b => b.onclick = async () => {
     const id = b.dataset.start;
-    if (id !== nextId && !confirm(`Następna w kolejce jest sesja ${nextId}. Na pewno zacząć ${id}?`)) return;
+    if (id !== nextId && !(await confirmDialog(`Następna w kolejce jest sesja ${nextId}. Na pewno zacząć ${id}?`))) return;
     startSession(id);
   });
   if (active) {
     document.getElementById("resumeBtn").onclick = () => renderSession();
-    document.getElementById("discardBtn").onclick = () => {
-      if (confirm("Odrzucić niedokończoną sesję?")) { saveActive(null); renderHome(); }
+    document.getElementById("discardBtn").onclick = async () => {
+      if (await confirmDialog("Odrzucić niedokończoną sesję?")) { saveActive(null); renderHome(); }
     };
   }
   document.getElementById("exportBtn").onclick = exportCSV;
@@ -467,7 +489,7 @@ function bindSession(active) {
   document.getElementById("finishBtn").onclick = () => finishSession(active);
 }
 
-function finishSession(active) {
+async function finishSession(active) {
   const rows = active.items
     .filter(it => it.sets.some(s => s.done))
     .map(it => ({
@@ -482,7 +504,7 @@ function finishSession(active) {
   let msg = `Zapisać sesję ${active.session}? Wykonane ćwiczenia: ${rows.length}/${active.items.length}.`;
   if (skipped > 0) msg += `\n(${skipped} bez odhaczonej serii — nie zostaną zapisane)`;
   if (!rows.length) { toast("Odhacz przynajmniej jedną serię (✓)"); return; }
-  if (!confirm(msg)) return;
+  if (!(await confirmDialog(msg))) return;
 
   const hist = loadHistory();
   hist.push({ date: active.date, session: active.session, rows });
