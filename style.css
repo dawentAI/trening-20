@@ -72,10 +72,30 @@ button:active { transform: scale(0.98); }
 .btn-row button { flex: 1; }
 .btn-small { padding: 8px 12px; font-size: 0.85rem; }
 .btn-danger { color: var(--danger); }
+.clear-history { width: 100%; margin-top: 8px; }
 
-.session-picker { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
-.session-picker button { width: 52px; height: 44px; font-weight: 700; }
-.session-picker button.dim { color: var(--muted); }
+.session-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  width: 100%; text-align: left;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+}
+.session-item.next { border-color: var(--accent); }
+.si-letter {
+  font-size: 1.4rem; font-weight: 800; color: var(--accent);
+  width: 28px; flex-shrink: 0; text-align: center;
+}
+.si-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.si-title { font-weight: 700; }
+.si-badge {
+  color: var(--accent); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; margin-left: 6px;
+}
+.si-station { color: var(--muted); font-size: 0.8rem; }
+.si-ex { color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
 
 /* ---- exercise card ---- */
 .pair-label {

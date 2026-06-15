@@ -266,10 +266,18 @@ function renderHome() {
       <div><b>${esc(next.title)}</b></div>
       <div class="sub">${esc(next.station)}</div>
       <button class="btn-primary" id="startBtn">Zacznij sesję ${esc(nextId)}</button>
-      <div class="session-picker">
-        ${PLAN.sessions.map(s =>
-          `<button data-start="${s.id}" class="${s.id === nextId ? "" : "dim"}">${s.id}</button>`).join("")}
-      </div>
+    </div>`;
+
+  html += `<div class="card"><h2>Wszystkie sesje</h2>
+      ${PLAN.sessions.map(s =>
+        `<button class="session-item ${s.id === nextId ? "next" : ""}" data-start="${s.id}">
+          <span class="si-letter">${esc(s.id)}</span>
+          <span class="si-text">
+            <span class="si-title">${esc(s.title)}${s.id === nextId ? ` <span class="si-badge">następna</span>` : ""}</span>
+            <span class="si-station">${esc(s.station)}</span>
+            <span class="si-ex">${s.exercises.map(e => esc(e.name)).join(" · ")}</span>
+          </span>
+        </button>`).join("")}
     </div>`;
 
   html += `<div class="card"><h2>Historia (${hist.length})</h2>`;
@@ -284,6 +292,7 @@ function renderHome() {
       <button class="btn-small" id="copyBtn">Kopiuj CSV</button>
       <button class="btn-small" id="importBtn">Import CSV</button>
     </div>
+    ${hist.length ? `<button class="btn-small btn-danger clear-history" id="clearBtn">Usuń całą historię</button>` : ""}
     <input type="file" id="importFile" accept=".csv,text/csv" style="display:none">
   </div>
   <div class="footer-note">plan: ${esc(PLAN.version)} · dane w pamięci przeglądarki — eksportuj CSV po sesji</div>`;
@@ -307,6 +316,13 @@ function renderHome() {
   const fileInput = document.getElementById("importFile");
   document.getElementById("importBtn").onclick = () => fileInput.click();
   fileInput.onchange = () => importCSV(fileInput);
+  const clearBtn = document.getElementById("clearBtn");
+  if (clearBtn) clearBtn.onclick = async () => {
+    if (!(await confirmDialog(`Usunąć całą historię (${hist.length} sesji)? Tej operacji NIE da się cofnąć.\nRozważ najpierw eksport CSV.`))) return;
+    saveHistory([]);
+    toast("Historia usunięta");
+    renderHome();
+  };
 }
 
 // ---------- widok: sesja ----------
