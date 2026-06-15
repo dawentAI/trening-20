@@ -311,7 +311,8 @@ function planExFor(active, item) {
   return sessionById(active.session).exercises.find(e => e.slot === item.slot);
 }
 
-function renderSession() {
+function renderSession(preserveScroll) {
+  const scrollY = window.scrollY;
   const active = loadActive();
   if (!active) { renderHome(); return; }
   const plan = sessionById(active.session);
@@ -397,13 +398,13 @@ function renderSession() {
   <button class="btn-primary" id="finishBtn">Zakończ i zapisz sesję</button>`;
 
   $app.innerHTML = html;
-  window.scrollTo(0, 0);
+  window.scrollTo(0, preserveScroll ? scrollY : 0);
   bindSession(active);
 }
 
 function bindSession(active) {
   const save = () => saveActive(active);
-  const rerender = () => { save(); renderSession(); };
+  const rerender = () => { save(); renderSession(true); };
 
   document.getElementById("backBtn").onclick = () => { save(); renderHome(); };
 
