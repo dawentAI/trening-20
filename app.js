@@ -547,6 +547,13 @@ async function finishSession(active) {
   saveActive(null);
   renderHome();
   toast("Sesja zapisana 💪");
+
+  // Co 7 sesji: przypomnij o kopii — dane są tylko w pamięci przeglądarki.
+  if (hist.length % 7 === 0) {
+    if (await confirmDialog(`To już ${hist.length} sesji w historii 💪\n\nDane są tylko w tej przeglądarce i można je stracić (np. czyszcząc dane witryny). Na wszelki wypadek zrób kopię.\n\nZapisać/udostępnić kopię CSV teraz?`)) {
+      exportCSV();
+    }
+  }
 }
 
 // ---------- start ----------
