@@ -229,6 +229,7 @@ select { max-width: 100%; }
 .mob-item .check { margin-left: 0; flex-shrink: 0; }
 .mob-item span { font-size: 0.9rem; }
 .mob-item.on span { color: var(--muted); text-decoration: line-through; }
+.mob-howto { margin-top: 6px; margin-bottom: 12px; }
 
 /* ---- history ---- */
 .hist-row {

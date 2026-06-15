@@ -341,12 +341,30 @@ function startSession(id) {
   saveActive({
     date: todayISO(), session: id, startedAt: Date.now(),
     items, mobilityDone: plan.mobility.map(() => false),
+    mobilityInfoOpen: plan.mobility.map(() => false),
   });
   renderSession();
 }
 
 function planExFor(active, item) {
   return sessionById(active.session).exercises.find(e => e.slot === item.slot);
+}
+
+// Wnętrze sekcji „Jak wykonać" (opis + 4 klatki + osadzony film) — wspólne dla ćwiczeń i mobilności.
+function howtoInner(info) {
+  return `<summary>ℹ️ Jak wykonać</summary>
+    <p>${esc(info.desc)}</p>
+    <div class="thumbs">
+      ${["hqdefault", "hq1", "hq2", "hq3"].map((f, k) =>
+        `<a href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">
+           <img loading="lazy" src="https://i.ytimg.com/vi/${info.yt}/${f}.jpg" alt="technika — klatka ${k + 1}"></a>`).join("")}
+    </div>
+    <div class="video-wrap">
+      <iframe loading="lazy" src="https://www.youtube.com/embed/${info.yt}"
+              title="Film z techniką" allowfullscreen
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <a class="yt-link" href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">▶ Otwórz w YouTube</a>`;
 }
 
 function renderSession(preserveScroll) {
@@ -376,22 +394,9 @@ function renderSession(preserveScroll) {
       ? `Ostatnio: <b>${fmtW(sug.last.weight)} kg</b> → ${(sug.last.reps || []).join(", ")} powt.${sug.last.rpe ? " @RPE " + sug.last.rpe : ""}`
       : "Brak historii";
     const info = typeof EXERCISE_INFO !== "undefined" ? EXERCISE_INFO[item.name] : null;
-    const howto = info ? `
-      <details class="howto" data-howto="${i}" ${item.infoOpen ? "open" : ""}>
-        <summary>ℹ️ Jak wykonać</summary>
-        <p>${esc(info.desc)}</p>
-        <div class="thumbs">
-          ${["hqdefault", "hq1", "hq2", "hq3"].map((f, k) =>
-            `<a href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">
-               <img loading="lazy" src="https://i.ytimg.com/vi/${info.yt}/${f}.jpg" alt="technika — klatka ${k + 1}"></a>`).join("")}
-        </div>
-        <div class="video-wrap">
-          <iframe loading="lazy" src="https://www.youtube.com/embed/${info.yt}"
-                  title="Film z techniką" allowfullscreen
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-        </div>
-        <a class="yt-link" href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">▶ Otwórz w YouTube</a>
-      </details>` : "";
+    const howto = info
+      ? `<details class="howto" data-howto="${i}" ${item.infoOpen ? "open" : ""}>${howtoInner(info)}</details>`
+      : "";
 
     html += `<div class="card ex-card ${allDone ? "done-all" : ""}" data-i="${i}">
       <div class="ex-head">
@@ -432,11 +437,15 @@ function renderSession(preserveScroll) {
   });
 
   html += `<div class="pair-label">Mobilność (~3 min)</div><div class="card">
-    ${plan.mobility.map((m, j) => `
-      <div class="mob-item ${active.mobilityDone[j] ? "on" : ""}">
+    ${plan.mobility.map((m, j) => {
+      const minfo = typeof MOBILITY_INFO !== "undefined" ? MOBILITY_INFO[m] : null;
+      const open = (active.mobilityInfoOpen || [])[j];
+      return `<div class="mob-item ${active.mobilityDone[j] ? "on" : ""}">
         <button class="check ${active.mobilityDone[j] ? "on" : ""}" data-mob="${j}">${active.mobilityDone[j] ? "✓" : "○"}</button>
         <span>${esc(m)}</span>
-      </div>`).join("")}
+      </div>
+      ${minfo ? `<details class="howto mob-howto" data-mobhowto="${j}" ${open ? "open" : ""}>${howtoInner(minfo)}</details>` : ""}`;
+    }).join("")}
   </div>
   <button class="btn-primary" id="finishBtn">Zakończ i zapisz sesję</button>`;
 
@@ -453,6 +462,11 @@ function bindSession(active) {
 
   document.querySelectorAll("[data-howto]").forEach(d => d.ontoggle = () => {
     active.items[+d.dataset.howto].infoOpen = d.open;
+    save();
+  });
+  document.querySelectorAll("[data-mobhowto]").forEach(d => d.ontoggle = () => {
+    if (!active.mobilityInfoOpen) active.mobilityInfoOpen = [];
+    active.mobilityInfoOpen[+d.dataset.mobhowto] = d.open;
     save();
   });
   document.querySelectorAll("[data-w]").forEach(inp => inp.onchange = () => {
@@ -532,8 +546,7 @@ async function finishSession(active) {
   saveHistory(hist);
   saveActive(null);
   renderHome();
-  toast("Sesja zapisana 💪 — eksportuję CSV…");
-  exportCSV();
+  toast("Sesja zapisana 💪");
 }
 
 // ---------- start ----------

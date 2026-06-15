@@ -160,3 +160,26 @@ const EXERCISE_INFO = {
   "DB FRENCH PRESS": { yt: "LM8ahUmGnOQ",
     desc: "Jeden hantel trzymany oburącz nad głową. Opuść za głowę, zginając łokcie blisko głowy, i wyprostuj ramiona do pełna." },
 };
+
+// Opisy + filmy dla ćwiczeń mobilności. Klucz = dokładny tekst z PLAN.sessions[].mobility.
+// Filmy: kandydaci z tools/find_mobility.py (krótkie, wiarygodne kanały) — łatwe do podmiany.
+const MOBILITY_INFO = {
+  "Rozciąganie zginaczy bioder w półklęku 2×30 s/str.": { yt: "iZ1eZBY4fwM",
+    desc: "Klęk na jednym kolanie (miękkie podłoże pod kolanem), druga noga z przodu zgięta ~90°. Napnij pośladek nogi klęczącej i delikatnie przesuń biodra w przód — rozciąganie z przodu biodra. Tułów pionowo, bez wyginania lędźwi." },
+  "Rozciąganie klatki o słupek 2×30 s": { yt: "CEQMx4zFwYs",
+    desc: "Przedramię oprzyj o framugę/słupek, łokieć na wysokości barku (~90°). Zrób mały krok w przód i delikatnie obróć tułów w drugą stronę — czujesz rozciąganie przedniej części klatki i barku. Nie wzruszaj barku do ucha." },
+  "Dead bug 2×10": { yt: "o4GKiEoYClI",
+    desc: "Leż na plecach, ręce nad barkami, biodra i kolana zgięte 90°, lędźwie dociśnięte do podłogi. Powoli opuszczaj przeciwległą rękę i nogę prawie do wyprostu bez odrywania pleców; wróć i zmień stronę. Spokojny oddech." },
+  "Rozciąganie dwugłowych 2×30 s/str.": { yt: "LVY692zJK0A",
+    desc: "Jedna pięta z przodu na podłodze, palce w górę, kolano lekko ugięte. Odprowadź biodra w tył (jak ukłon) z prostymi plecami i pochyl się od bioder, aż poczujesz rozciąganie z tyłu uda. Nie zaokrąglaj pleców." },
+  "Rotacje piersiowe „open book” 2×8/str.": { yt: "YMswmjk7Qj4",
+    desc: "Leż na boku, biodra i kolana zgięte 90°, ręce wyprostowane przed sobą złożone razem. Górną ręką „otwórz książkę” — prowadź ją łukiem na drugą stronę, wzrok za dłonią, aż łopatka dotknie podłogi. Ruch z klatki, biodra nieruchome." },
+  "Plank 2×30 s": { yt: "pSHjTRCQxIw",
+    desc: "Podpór na przedramionach, łokcie pod barkami. Ciało w linii prostej od głowy do pięt — napnij brzuch i pośladki, miednica lekko podwinięta (bez opadania bioder). Naturalny oddech, kark wydłużony." },
+  "Couch stretch 2×30 s/str.": { yt: "Fg-lwNBzVV8",
+    desc: "Klęk tyłem do ściany/ławki; piszczel nogi z tyłu oprzyj o ścianę, kolano nisko, druga noga z przodu w wykroku. Napnij pośladek i wyprostuj tułów — mocne rozciąganie przodu uda i biodra. Zaczynaj łagodnie, lędźwie neutralne." },
+  "Krążenia ramion z kijem/gumą 2×10": { yt: "vQjlYoZCz50",
+    desc: "Chwyć kij lub gumę szeroko nachwytem przed sobą. Z wyprostowanymi łokciami prowadź drążek łukiem nad głowę i za plecy, potem z powrotem — płynnie, bez bólu. Węższy chwyt = trudniej; dobierz szerokość tak, by ruch był swobodny." },
+  "Cat-cow ×8": { yt: "u5TglXNBrtE",
+    desc: "Klęk podparty, dłonie pod barkami, kolana pod biodrami. Wdech — ugnij plecy w dół, klatka i wzrok w górę (krowa). Wydech — zaokrąglij plecy w górę, broda do mostka (kot). Płynnie, w rytm oddechu, ruch z całego kręgosłupa." },
+};
