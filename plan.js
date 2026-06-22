@@ -183,3 +183,58 @@ const MOBILITY_INFO = {
   "Cat-cow ×8": { yt: "u5TglXNBrtE",
     desc: "Klęk podparty, dłonie pod barkami, kolana pod biodrami. Wdech — ugnij plecy w dół, klatka i wzrok w górę (krowa). Wydech — zaokrąglij plecy w górę, broda do mostka (kot). Płynnie, w rytm oddechu, ruch z całego kręgosłupa." },
 };
+
+// Pracujące partie mięśni dla wizualizacji (mapa sylwetki w „Jak wykonać").
+// Klucz = dokładna nazwa ćwiczenia (EXERCISE_INFO) lub tekst mobilności (MOBILITY_INFO).
+// primary = mięsień główny (pomarańczowy), secondary = pomocniczy (amber).
+// Dozwolone klucze mięśni (muszą zgadzać się z MUSCLE_LABELS/strefami w app.js):
+//   chest, abs, front-delts, side-delts, rear-delts, biceps, triceps, forearms,
+//   mid-back, lats, lower-back, glutes, quads, hamstrings, calves, hip-flexors
+const MUSCLE_MAP = {
+  // — ćwiczenia główne i zamienniki —
+  "FLAT DB PRESS": { primary: ["chest"], secondary: ["triceps", "front-delts"] },
+  "INCLINE CHEST-SUPPORTED DB ROW": { primary: ["lats", "mid-back"], secondary: ["biceps", "rear-delts"] },
+  "LEG PRESS": { primary: ["quads", "glutes"], secondary: ["hamstrings"] },
+  "LEG PRESS TOE PRESS": { primary: ["calves"] },
+  "DB ROMANIAN DEADLIFT": { primary: ["hamstrings", "glutes"], secondary: ["lower-back"] },
+  "SEATED DB SHOULDER PRESS": { primary: ["front-delts", "side-delts"], secondary: ["triceps"] },
+  "LAT PULLDOWN": { primary: ["lats"], secondary: ["biceps", "rear-delts"] },
+  "ROPE FACEPULL": { primary: ["rear-delts"], secondary: ["mid-back"] },
+  "LEG EXTENSION": { primary: ["quads"] },
+  "SEATED LEG CURL": { primary: ["hamstrings"] },
+  "EZ BAR CURL": { primary: ["biceps"], secondary: ["forearms"] },
+  "EZ BAR SKULL CRUSHER": { primary: ["triceps"] },
+  "MACHINE CHEST PRESS": { primary: ["chest"], secondary: ["triceps", "front-delts"] },
+  "WEIGHTED DIP": { primary: ["chest", "triceps"], secondary: ["front-delts"] },
+  "1-ARM DB ROW": { primary: ["lats"], secondary: ["biceps", "rear-delts"] },
+  "SEATED CABLE ROW": { primary: ["lats", "mid-back"], secondary: ["biceps"] },
+  "HACK SQUAT": { primary: ["quads", "glutes"], secondary: ["hamstrings"] },
+  "GOBLET SQUAT": { primary: ["quads", "glutes"] },
+  "SEATED CALF RAISE": { primary: ["calves"] },
+  "STANDING CALF RAISE": { primary: ["calves"] },
+  "ROMANIAN DEADLIFT": { primary: ["hamstrings", "glutes"], secondary: ["lower-back"] },
+  "45' HYPEREXTENSION": { primary: ["lower-back", "glutes"], secondary: ["hamstrings"] },
+  "MACHINE SHOULDER PRESS": { primary: ["front-delts", "side-delts"], secondary: ["triceps"] },
+  "STANDING DB ARNOLD PRESS": { primary: ["front-delts", "side-delts"], secondary: ["triceps"] },
+  "NEUTRAL-GRIP PULLDOWN": { primary: ["lats"], secondary: ["biceps"] },
+  "2-GRIP PULL-UP": { primary: ["lats"], secondary: ["biceps"] },
+  "CABLE LATERAL RAISE": { primary: ["side-delts"] },
+  "REVERSE PEC DECK": { primary: ["rear-delts"], secondary: ["mid-back"] },
+  "DB STEP UP": { primary: ["quads", "glutes"], secondary: ["hamstrings"] },
+  "LYING LEG CURL": { primary: ["hamstrings"] },
+  "NORDIC HAM CURL": { primary: ["hamstrings"] },
+  "DB CURL": { primary: ["biceps"], secondary: ["forearms"] },
+  "CABLE EZ CURL": { primary: ["biceps"], secondary: ["forearms"] },
+  "OVERHEAD CABLE TRICEPS EXTENSION": { primary: ["triceps"] },
+  "DB FRENCH PRESS": { primary: ["triceps"] },
+  // — mobilność / rozciąganie (główny = mięsień rozciągany/pracujący) —
+  "Rozciąganie zginaczy bioder w półklęku 2×30 s/str.": { primary: ["hip-flexors"], secondary: ["quads"] },
+  "Rozciąganie klatki o słupek 2×30 s": { primary: ["chest"], secondary: ["front-delts"] },
+  "Dead bug 2×10": { primary: ["abs"] },
+  "Rozciąganie dwugłowych 2×30 s/str.": { primary: ["hamstrings"] },
+  "Rotacje piersiowe „open book” 2×8/str.": { primary: ["mid-back"] },
+  "Plank 2×30 s": { primary: ["abs"] },
+  "Couch stretch 2×30 s/str.": { primary: ["hip-flexors", "quads"] },
+  "Krążenia ramion z kijem/gumą 2×10": { primary: ["front-delts", "rear-delts"] },
+  "Cat-cow ×8": { primary: ["lower-back", "mid-back"] },
+};

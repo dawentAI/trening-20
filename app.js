@@ -350,10 +350,76 @@ function planExFor(active, item) {
   return sessionById(active.session).exercises.find(e => e.slot === item.slot);
 }
 
-// Wnętrze sekcji „Jak wykonać" (opis + 4 klatki + osadzony film) — wspólne dla ćwiczeń i mobilności.
-function howtoInner(info) {
+// ── Mapa pracujących mięśni (sylwetka przód/tył) ──────────────────
+// Dane: MUSCLE_MAP w plan.js. Strefy SVG odpowiadają kluczom mięśni.
+const MUSCLE_LABELS = {
+  "chest": "Klatka piersiowa", "abs": "Brzuch", "front-delts": "Barki — przednie",
+  "side-delts": "Barki — boczne", "rear-delts": "Barki — tylne",
+  "biceps": "Biceps", "triceps": "Triceps", "forearms": "Przedramiona",
+  "mid-back": "Górny grzbiet (kaptur, romboidy)", "lats": "Najszerszy grzbietu",
+  "lower-back": "Prostownik grzbietu", "glutes": "Pośladki",
+  "quads": "Czworogłowy uda (przód)", "hamstrings": "Dwugłowy uda (tył)",
+  "calves": "Łydki", "hip-flexors": "Zginacze bioder",
+};
+
+// Szara sylwetka strukturalna dla figury o środku C (przód lub tył).
+const baseFigure = C => `
+  <circle class="base" cx="${C}" cy="18" r="12"/>
+  <rect class="base" x="${C - 5}" y="29" width="10" height="8" rx="3"/>
+  <path class="base" d="M ${C - 20},44 Q ${C - 22},39 ${C - 15},38 L ${C + 15},38 Q ${C + 22},39 ${C + 20},44 L ${C + 15},118 Q ${C},127 ${C - 15},118 Z"/>
+  <circle class="base" cx="${C - 20}" cy="46" r="9"/><circle class="base" cx="${C + 20}" cy="46" r="9"/>
+  <rect class="base" x="${C - 31}" y="48" width="12" height="42" rx="6"/><rect class="base" x="${C + 19}" y="48" width="12" height="42" rx="6"/>
+  <rect class="base" x="${C - 30}" y="88" width="11" height="40" rx="5"/><rect class="base" x="${C + 19}" y="88" width="11" height="40" rx="5"/>
+  <circle class="base" cx="${C - 24}" cy="131" r="5"/><circle class="base" cx="${C + 24}" cy="131" r="5"/>
+  <path class="base" d="M ${C - 15},115 L ${C + 15},115 L ${C + 13},133 L ${C - 13},133 Z"/>
+  <rect class="base" x="${C - 15}" y="130" width="14" height="58" rx="7"/><rect class="base" x="${C + 1}" y="130" width="14" height="58" rx="7"/>
+  <circle class="base" cx="${C - 8}" cy="189" r="5"/><circle class="base" cx="${C + 8}" cy="189" r="5"/>
+  <rect class="base" x="${C - 14}" y="191" width="12" height="54" rx="6"/><rect class="base" x="${C + 2}" y="191" width="12" height="54" rx="6"/>
+  <ellipse class="base" cx="${C - 8}" cy="250" rx="7" ry="4"/><ellipse class="base" cx="${C + 8}" cy="250" rx="7" ry="4"/>`;
+
+// Strefy mięśni: [klucz, fn(klasa)→svg]. Przód środek C=65, tył C=195.
+const MUSCLE_ZONES = [
+  ["chest", c => `<rect class="${c}" x="48" y="46" width="15" height="21" rx="5"/><rect class="${c}" x="67" y="46" width="15" height="21" rx="5"/>`],
+  ["front-delts", c => `<circle class="${c}" cx="45" cy="46" r="8"/><circle class="${c}" cx="85" cy="46" r="8"/>`],
+  ["side-delts", c => `<circle class="${c}" cx="38" cy="50" r="5"/><circle class="${c}" cx="92" cy="50" r="5"/>`],
+  ["abs", c => `<rect class="${c}" x="56" y="70" width="18" height="44" rx="5"/>`],
+  ["biceps", c => `<rect class="${c}" x="35" y="53" width="10" height="31" rx="5"/><rect class="${c}" x="85" y="53" width="10" height="31" rx="5"/>`],
+  ["forearms", c => `<rect class="${c}" x="35" y="90" width="9" height="35" rx="4"/><rect class="${c}" x="86" y="90" width="9" height="35" rx="4"/>`],
+  ["hip-flexors", c => `<rect class="${c}" x="52" y="124" width="11" height="12" rx="4"/><rect class="${c}" x="67" y="124" width="11" height="12" rx="4"/>`],
+  ["quads", c => `<rect class="${c}" x="51" y="134" width="12" height="50" rx="6"/><rect class="${c}" x="67" y="134" width="12" height="50" rx="6"/>`],
+  ["rear-delts", c => `<circle class="${c}" cx="175" cy="46" r="8"/><circle class="${c}" cx="215" cy="46" r="8"/>`],
+  ["mid-back", c => `<rect class="${c}" x="181" y="44" width="28" height="28" rx="6"/>`],
+  ["lats", c => `<polygon class="${c}" points="176,64 191,70 189,98 179,90"/><polygon class="${c}" points="214,64 199,70 201,98 211,90"/>`],
+  ["triceps", c => `<rect class="${c}" x="165" y="53" width="10" height="31" rx="5"/><rect class="${c}" x="215" y="53" width="10" height="31" rx="5"/>`],
+  ["lower-back", c => `<rect class="${c}" x="184" y="96" width="22" height="20" rx="5"/>`],
+  ["glutes", c => `<rect class="${c}" x="181" y="120" width="13" height="20" rx="6"/><rect class="${c}" x="196" y="120" width="13" height="20" rx="6"/>`],
+  ["hamstrings", c => `<rect class="${c}" x="181" y="140" width="13" height="46" rx="6"/><rect class="${c}" x="196" y="140" width="13" height="46" rx="6"/>`],
+  ["calves", c => `<rect class="${c}" x="182" y="192" width="11" height="44" rx="5"/><rect class="${c}" x="197" y="192" width="11" height="44" rx="5"/>`],
+];
+
+// Buduje blok mapy mięśni (sylwetka + legenda). Pusty string, gdy brak danych.
+function muscleBlock(m) {
+  if (!m || (!(m.primary || []).length && !(m.secondary || []).length)) return "";
+  const pri = new Set(m.primary || []), sec = new Set(m.secondary || []);
+  const zones = MUSCLE_ZONES.map(([k, fn]) => fn(pri.has(k) ? "mz pri" : sec.has(k) ? "mz sec" : "mz")).join("");
+  const svg = `<svg class="bodymap" viewBox="0 0 260 268" role="img" aria-label="Mapa pracujących mięśni">
+      ${baseFigure(65)}${baseFigure(195)}${zones}
+      <text class="cap" x="65" y="266" text-anchor="middle">PRZÓD</text>
+      <text class="cap" x="195" y="266" text-anchor="middle">TYŁ</text>
+    </svg>`;
+  const row = (k, cls) => `<span class="mleg"><span class="dot ${cls}"></span>${esc(MUSCLE_LABELS[k] || k)}</span>`;
+  const legend = `<div class="muscle-legend">
+      ${(m.primary || []).map(k => row(k, "pri")).join("")}
+      ${(m.secondary || []).map(k => row(k, "sec")).join("")}
+    </div>`;
+  return `<div class="muscle-map"><div class="mm-title">Pracujące mięśnie</div>${svg}${legend}</div>`;
+}
+
+// Wnętrze sekcji „Jak wykonać" (opis + mapa mięśni + 4 klatki + osadzony film) — wspólne dla ćwiczeń i mobilności.
+function howtoInner(info, muscles) {
   return `<summary>ℹ️ Jak wykonać</summary>
     <p>${esc(info.desc)}</p>
+    ${muscleBlock(muscles)}
     <div class="thumbs">
       ${["hqdefault", "hq1", "hq2", "hq3"].map((f, k) =>
         `<a href="https://youtu.be/${info.yt}" target="_blank" rel="noopener">
@@ -394,8 +460,9 @@ function renderSession(preserveScroll) {
       ? `Ostatnio: <b>${fmtW(sug.last.weight)} kg</b> → ${(sug.last.reps || []).join(", ")} powt.${sug.last.rpe ? " @RPE " + sug.last.rpe : ""}`
       : "Brak historii";
     const info = typeof EXERCISE_INFO !== "undefined" ? EXERCISE_INFO[item.name] : null;
+    const muscles = typeof MUSCLE_MAP !== "undefined" ? MUSCLE_MAP[item.name] : null;
     const howto = info
-      ? `<details class="howto" data-howto="${i}" ${item.infoOpen ? "open" : ""}>${howtoInner(info)}</details>`
+      ? `<details class="howto" data-howto="${i}" ${item.infoOpen ? "open" : ""}>${howtoInner(info, muscles)}</details>`
       : "";
 
     html += `<div class="card ex-card ${allDone ? "done-all" : ""}" data-i="${i}">
@@ -444,7 +511,7 @@ function renderSession(preserveScroll) {
         <button class="check ${active.mobilityDone[j] ? "on" : ""}" data-mob="${j}">${active.mobilityDone[j] ? "✓" : "○"}</button>
         <span>${esc(m)}</span>
       </div>
-      ${minfo ? `<details class="howto mob-howto" data-mobhowto="${j}" ${open ? "open" : ""}>${howtoInner(minfo)}</details>` : ""}`;
+      ${minfo ? `<details class="howto mob-howto" data-mobhowto="${j}" ${open ? "open" : ""}>${howtoInner(minfo, typeof MUSCLE_MAP !== "undefined" ? MUSCLE_MAP[m] : null)}</details>` : ""}`;
     }).join("")}
   </div>
   <button class="btn-primary" id="finishBtn">Zakończ i zapisz sesję</button>`;
